@@ -1,0 +1,165 @@
+@prefix : <http://www.semanticweb.org/dimmerma/ontologies/2021/1/untitled-ontology-11#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork> .
+
+<http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#schoolworkHasInstructor
+:schoolworkHasInstructor rdf:type owl:ObjectProperty ;
+                         rdfs:subPropertyOf :schoolworkHasRoleplayer .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#schoolworkHasRoleplayer
+:schoolworkHasRoleplayer rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#schoolworkHasStudent
+:schoolworkHasStudent rdf:type owl:ObjectProperty ;
+                      rdfs:subPropertyOf :schoolworkHasRoleplayer .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#schoolworkHasSubject
+:schoolworkHasSubject rdf:type owl:ObjectProperty ;
+                      rdfs:subPropertyOf :schoolworkHasRoleplayer .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#hasSubject
+:hasSubject rdf:type owl:DatatypeProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Assessment
+:Assessment rdf:type owl:Class ;
+            rdfs:subClassOf :Schoolwork .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Assignment
+:Assignment rdf:type owl:Class ;
+            rdfs:subClassOf :Schoolwork .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Essay
+:Essay rdf:type owl:Class ;
+       rdfs:subClassOf :Assignment .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Instructor
+:Instructor rdf:type owl:Class ;
+            rdfs:subClassOf :Role .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Quiz
+:Quiz rdf:type owl:Class ;
+      rdfs:subClassOf :Assessment .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Role
+:Role rdf:type owl:Class ;
+      owl:disjointWith :Schoolwork ,
+                       :Subject .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Schoolwork
+:Schoolwork rdf:type owl:Class ;
+            owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                         owl:onProperty :schoolworkHasInstructor ;
+                                                         owl:someValuesFrom :Instructor
+                                                       ]
+                                                       [ rdf:type owl:Restriction ;
+                                                         owl:onProperty :schoolworkHasStudent ;
+                                                         owl:someValuesFrom :Student
+                                                       ]
+                                                       [ rdf:type owl:Restriction ;
+                                                         owl:onProperty :schoolworkHasSubject ;
+                                                         owl:someValuesFrom :Subject
+                                                       ]
+                                                     ) ;
+                                  rdf:type owl:Class
+                                ] ;
+            owl:disjointWith :Subject .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Student
+:Student rdf:type owl:Class ;
+         owl:equivalentClass [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf :schoolworkHasStudent
+                                              ] ;
+                               owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+                               owl:onClass :Schoolwork
+                             ] ;
+         rdfs:subClassOf :Role .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Subject
+:Subject rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Test
+:Test rdf:type owl:Class ;
+      rdfs:subClassOf :Assessment .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Bob
+:Bob rdf:type owl:NamedIndividual .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#BobsPhilosophyPaper
+:BobsPhilosophyPaper rdf:type owl:NamedIndividual ,
+                              :Assignment ;
+                     :schoolworkHasInstructor :Sue ;
+                     :schoolworkHasStudent :Bob ;
+                     :schoolworkHasSubject :Philosophy .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#BobsPhilosophyTest
+:BobsPhilosophyTest rdf:type owl:NamedIndividual ,
+                             :Assessment ;
+                    :schoolworkHasInstructor :Sue ;
+                    :schoolworkHasStudent :Bob ;
+                    :schoolworkHasSubject :Philosophy .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Philosophy
+:Philosophy rdf:type owl:NamedIndividual ,
+                     :Subject .
+
+
+###  http://www.semanticweb.org/dimmerma/ontologies/2021/1/shoolwork#Sue
+:Sue rdf:type owl:NamedIndividual ,
+              :Instructor .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( :Bob
+                        :BobsPhilosophyPaper
+                        :BobsPhilosophyTest
+                        :Philosophy
+                        :Sue
+                      )
+] .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
